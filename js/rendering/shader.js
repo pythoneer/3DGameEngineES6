@@ -1,5 +1,11 @@
 
 export class Shader {
+
+    /**
+     *
+     * @param gl
+     * @param {string} shaderName - loads the shader source files with this name and *.vs, *.fs extension
+     */
     constructor(gl, shaderName) {
         this.gl = gl;
         this.shaderName = shaderName;
@@ -10,8 +16,10 @@ export class Shader {
         }
 
         //fetch shaders with ajax;
+        // TODO no chaining; use promises
         var self = this;
         setTimeout(function(){
+
             $.get( "./res/shaders/" + self.shaderName + ".vs", function( vsdata ) {
 
                 console.log(vsdata);
@@ -26,35 +34,46 @@ export class Shader {
                         throw "Could not link the shader program!";
                     }
 
-                });
+                }); //fs shader
+            }); //vs shader
 
-            });
-        }, 200);
+        }, 20); // timeout
 
-    }
+    } // constructor
 
+    /**
+     *
+     */
     bind() {
         this.gl.useProgram(this.program);
     }
 
-    attributeSetFloats(attr_name, rsize, arr) {
-        this.gl.bindBuffer(this.gl.ARRAY_BUFFER, this.gl.createBuffer());
-        this.gl.bufferData(this.gl.ARRAY_BUFFER, new Float32Array(arr), this.gl.STATIC_DRAW);
-        var attr = this.gl.getAttribLocation(this.program, attr_name);
-        this.gl.enableVertexAttribArray(attr);
-        this.gl.vertexAttribPointer(attr, rsize, this.gl.FLOAT, false, 0, 0);
-    }
-
+    /**
+     *
+     * @param {Shader} self
+     * @param {string} text - shader sourcecode
+     */
     addVertexShader(self, text)
     {
         self.addProgram(self, text, self.gl.VERTEX_SHADER);
     }
 
+    /**
+     *
+     * @param {Shader} self
+     * @param {string} text - shader sourcecode
+     */
     addFragmentShader(self, text)
     {
         self.addProgram(self, text, self.gl.FRAGMENT_SHADER);
     }
 
+    /**
+     *
+     * @param {Shader} self
+     * @param {string} text - shader sourcecode
+     * @param type - gl.FRAGMENT_SHADER or gl.VERTEX_SHADER
+     */
     addProgram(self, text, type)
     {
         var shader = self.gl.createShader(type);

@@ -18,5 +18,3 @@ var game = new TestGame1();
 
 var engine = new CoreEngine(100, 100, 60, game, glContext);
 engine.start();
-
-
