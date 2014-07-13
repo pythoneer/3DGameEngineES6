@@ -85,10 +85,13 @@ export class CoreEngine {
         gl.clearColor(0.8, 0.8, 0.8, 1);
         gl.clear(gl.COLOR_BUFFER_BIT);
 
-        self.basicShader.bind();
-        this.simpleMesh.draw();
+//        self.basicShader.bind();
+//        self.simpleMesh.draw();
+        this.game.input(this.game);
+        this.game.update(this.game);
+        this.game.render(this.game);
 
-        gl.drawArrays(gl.TRIANGLE_STRIP, 0, 4);
+        //gl.drawArrays(gl.TRIANGLE_STRIP, 0, 4);
     }
 
 

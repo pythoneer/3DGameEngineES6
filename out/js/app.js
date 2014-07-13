@@ -254,9 +254,9 @@ System.register("../../js/core/coreengine", [], function() {
       }
       gl.clearColor(0.8, 0.8, 0.8, 1);
       gl.clear(gl.COLOR_BUFFER_BIT);
-      self.basicShader.bind();
-      this.simpleMesh.draw();
-      gl.drawArrays(gl.TRIANGLE_STRIP, 0, 4);
+      this.game.input(this.game);
+      this.game.update(this.game);
+      this.game.render(this.game);
     }
   }, {});
   return {get CoreEngine() {
@@ -267,13 +267,27 @@ System.register("../../js/testgame", [], function() {
   "use strict";
   var __moduleName = "../../js/testgame";
   var Game = System.get("../../js/core/game").Game;
-  var TestGame1 = function TestGame1() {
-    $traceurRuntime.defaultSuperCall(this, $TestGame1.prototype, arguments);
+  var Shader = System.get("../../js/rendering/shader").Shader;
+  var Mesh = System.get("../../js/rendering/mesh").Mesh;
+  var Vector3f = System.get("../../js/core/vector3f").Vector3f;
+  var Vertex = System.get("../../js/rendering/vertex").Vertex;
+  var TestGame1 = function TestGame1(gl) {
+    this.basicShader = new Shader(gl, "basic-shader");
+    this.simpleMesh = new Mesh(gl);
+    var vertecies = [new Vertex(new Vector3f(-1, 0, 0)), new Vertex(new Vector3f(0, 1, 0)), new Vertex(new Vector3f(0, -1, 0)), new Vertex(new Vector3f(1, 0, 0))];
+    this.simpleMesh.addVertices(vertecies);
   };
-  var $TestGame1 = TestGame1;
-  ($traceurRuntime.createClass)(TestGame1, {init: function() {
+  ($traceurRuntime.createClass)(TestGame1, {
+    init: function(gl) {
       console.log("init testgame1");
-    }}, {}, Game);
+    },
+    input: function(self) {},
+    update: function(self) {},
+    render: function(self) {
+      self.basicShader.bind();
+      self.simpleMesh.draw();
+    }
+  }, {}, Game);
   return {get TestGame1() {
       return TestGame1;
     }};
@@ -288,7 +302,7 @@ System.register("../../js/app", [], function() {
   element.innerHTML = "traceur laeuft";
   var canvas = document.querySelector("#webgl");
   var glContext = canvas.getContext("experimental-webgl");
-  var game = new TestGame1();
+  var game = new TestGame1(glContext);
   var engine = new CoreEngine(100, 100, 60, game, glContext);
   engine.start();
   return {get a() {

@@ -14,7 +14,7 @@ var canvas = document.querySelector("#webgl");
 var glContext = canvas.getContext("experimental-webgl");
 //console.log(glContext);
 
-var game = new TestGame1();
+var game = new TestGame1(glContext);
 
 var engine = new CoreEngine(100, 100, 60, game, glContext);
 engine.start();
